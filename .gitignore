@@ -61,6 +61,10 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
+# Django migrations
+*/migrations/*.py
+*/migrations/*.pyc
+
 # Flask stuff:
 instance/
 .webassets-cache
@@ -169,3 +173,13 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Static and media files
+/static/
+/media/
+
+# IDE and editor files
+.DS_Store
+.vscode/
+.idea/
+
