@@ -1,5 +1,2 @@
-#twitter bootstrap
-django-bootstrap-v5
-
 #for editing built in widgets
 django-widget-tweaks
