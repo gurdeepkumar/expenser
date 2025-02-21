@@ -13,29 +13,31 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            {% if request.user.is_authenticated %}
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+            <div class="collapse navbar-collapse" id="navbarNav"></div>
+                <ul class="navbar-nav ms-auto">
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'list_expenses' %}">View Expenses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'add_expenses' %}">Add Expense</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'password_change' %}">{{ request.user.username|title }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                         </li>
-                    </ul>
-                </div>
-            {% else %}
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">Login</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
                         </li>
-                    </ul>
-                </div>
-            {% endif %}
+                    {% endif %}
+                </ul>
+        </div>
         </div>
     </nav>
 

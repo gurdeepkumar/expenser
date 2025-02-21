@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h2>Edit Expense</h2>
+
+<form method="post" class="row g-3">
+    {% csrf_token %}
+    <div class="form-group col-md-6">
+        <label for="id_title">Title:</label>
+        {{ form.title|add_class:"form-control" }}
+    </div>  
+
+    <div class="form-group col-md-6">
+        <label for="id_title">Amount:</label>
+        {{ form.amount|add_class:"form-control" }}
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="id_title">Category:</label>
+        {{ form.category|add_class:"form-control" }}
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="id_title">New Category (optional):</label>
+        {{ form.new_category|add_class:"form-control" }}
+    </div>
+
+    <div class="form-group col-md-4">
+        <label for="id_title">Date:</label>
+        {{ form.date|add_class:"form-control" }}
+    </div>
+
+    <div class="form-group col-md-12">
+        <label for="id_title">Description:</label>
+        {{ form.description|add_class:"form-control form-control-sm"|attr:"rows:2" }}
+    </div>
+
+    <div class="form-group col-md-2">
+        <button type="submit" class="btn btn-primary">Update Expense</button>
+    </div>
+    <div class="form-group col-md-2">
+        <a href="{% url 'view_expense' expense.id %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+{% endblock %}

@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "bootstrap5",
     "widget_tweaks",
     "core",
     "accounts",
+    "expenses",
 ]
 
 LOGIN_REDIRECT_URL = "home"  # Redirect after login
