@@ -22,7 +22,7 @@
             <td>€{{ expense.amount }}</td>
             <td>{{ expense.category.name }}</td>
             <td>{{ expense.date }}</td>
-            <td>{{ expense.user.username }}</td>
+            <td>{{ expense.user.username | title }}</td>
         </tr>
         {% empty %}
         <tr>
