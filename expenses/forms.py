@@ -36,9 +36,7 @@ class ExpenseForm(forms.ModelForm):
     def clean_new_category(self):
         category_name = self.cleaned_data.get("category")
         new_category_name = self.cleaned_data.get("new_category")
-
-        print(category_name, new_category_name)
-        print(self.cleaned_data.items())
+        new_category_name = new_category_name.title()
 
         # Check for duplicate categories
         if category_name == None:
