@@ -1,9 +1,69 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
 <div class="mt-3 mb-3">
     <h2>All Expenses </h2>
 </div>
+<div class="row">
+    <div class="col-md-4 mb-2 mt-2">
+        <input type="text" class="form-control search-input" placeholder="Search...">
+    </div>
+    <div class="col-md-4 mb-2 mt-2 d-grid">
+        <button class="btn btn-primary">Serach</button>
+    </div>
+    <div class="col-md-4 d-grid mb-2 mt-2 justify-content-md-end">
+        <button id="filterToggleBtn" class="btn btn-secondary">Show Filter Option</button>
+    </div>
+</div>
+
+<div id="filterOptions" {%if not request.GET %} style="display: none;" {% else %} style="display: block;" {%endif%} >
+    <form method="get" class="row">
+        <div class="col-md-4">
+            <div class="form-group my-2">
+                <label for="min_amount">Min Amount:</label>
+                {{ form.min_amount|add_class:"form-control" }}
+            </div> 
+            <div class="form-group my-2">
+                <label for="max_amount">Max Amount:</label>
+                {{ form.max_amount|add_class:"form-control" }}
+            </div> 
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group my-2">
+                <label for="from_date">From:</label>
+                {{ form.from_date|add_class:"form-control" }}
+            </div> 
+            <div class="form-group my-2">
+                <label for="to_date">To:</label>
+                {{ form.to_date|add_class:"form-control" }}
+            </div> 
+        </div>
+
+        <div class="col-md-4 my-2">
+            <div class="form-group col-md-12">
+                <label>Category:</label>
+                <select class="selectpicker form-control" name="category" multiple>
+                    {% for cat in categories %}
+                        <option value="{{ cat }}" {% if cat in selected_categories %} selected {% endif %}>{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div> 
+            <div class="row my-2">
+                <div class="form-group col-md-6">
+                    <label></label>
+                    <button type="submit" name="clear_filters" class="btn btn-warning form-control">Clear</button>
+                </div>
+                <div class="form-group col-md-6">
+                    <label></label>
+                    <button type="submit" class="btn btn-primary form-control">Filter</button>
+                </div> 
+            </div>
+        </div>        
+    </form>
+</div>
+
 
 <table class="table table-hover">
     <thead>

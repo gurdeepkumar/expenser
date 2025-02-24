@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Expense, Category
-from .forms import ExpenseForm
+from .forms import ExpenseForm, FilterForm
 
 
 # Create your views here.
@@ -10,7 +10,6 @@ def add_expense(request):
     if request.method == "POST":
         form = ExpenseForm(request.POST, user=request.user)
         if form.is_valid():
-            print(form.cleaned_data)
             expense = form.save(commit=False)
             expense.user = request.user  # Assign expense to logged-in user
 
@@ -53,8 +52,66 @@ def add_expense(request):
 
 @login_required
 def list_expenses(request):
-    expenses = Expense.objects.filter(user=request.user)
-    return render(request, "expenses/list_expenses.html", {"expenses": expenses})
+    if (request.GET == {}) or ("clear_filters" in request.GET):
+        print("this is initial")
+        print(request.GET)
+        user = request.user
+        expenses = Expense.objects.filter(user=request.user)
+        categories = user.expense_set.values_list(
+            "category__name", flat=True
+        ).distinct()
+
+        form = FilterForm(user=request.user)
+
+        return render(
+            request,
+            "expenses/list_expenses.html",
+            {"expenses": expenses, "categories": categories, "form": form},
+        )
+    else:
+        print("this is with filters")
+        print(request.GET)
+        user = request.user
+        expenses = Expense.objects.filter(user=request.user)
+        form = FilterForm(request.GET, user=request.user)
+
+        # Get filter values from request
+        selected_categories = request.GET.getlist(
+            "category"
+        )  # Get multiple selected categories
+        min_amount = request.GET.get("min_amount")
+        max_amount = request.GET.get("max_amount")
+        start_date = request.GET.get("from_date")
+        end_date = request.GET.get("to_date")
+
+        # Apply filters if values are provided
+        if selected_categories:
+            expenses = expenses.filter(
+                category__name__in=selected_categories
+            )  # Filter by multiple categories
+        if min_amount:
+            expenses = expenses.filter(amount__gte=min_amount)
+        if max_amount:
+            expenses = expenses.filter(amount__lte=max_amount)
+        if start_date:
+            expenses = expenses.filter(date__gte=start_date)
+        if end_date:
+            expenses = expenses.filter(date__lte=end_date)
+
+        categories = user.expense_set.values_list(
+            "category__name", flat=True
+        ).distinct()
+
+        return render(
+            request,
+            "expenses/list_expenses.html",
+            {
+                "expenses": expenses,
+                "categories": categories,
+                "selected_categories": selected_categories,
+                "form": form,
+            },
+        )
 
 
 @login_required

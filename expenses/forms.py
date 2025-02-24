@@ -2,6 +2,47 @@ from django import forms
 from .models import Expense, Category
 
 
+class FilterForm(forms.Form):
+    from django import forms
+
+
+class FilterForm(forms.Form):
+
+    min_amount = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_digits=10,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={"placeholder": "Max Amount"}),
+    )
+    max_amount = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_digits=10,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={"placeholder": "Min Amount"}),
+    )
+    from_date = forms.DateField(
+        required=False, widget=forms.DateInput(attrs={"type": "date"})
+    )
+    to_date = forms.DateField(
+        required=False, widget=forms.DateInput(attrs={"type": "date"})
+    )
+    category = forms.CharField(
+        required=False, widget=forms.TextInput(attrs={"placeholder": "Category"})
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user")
+        super().__init__(*args, **kwargs)
+
+        # Fetch predefined categories + categories created by the user
+        if self.user:
+            self.fields["category"].queryset = Category.objects.filter(
+                predefined=True
+            ) | Category.objects.filter(user=self.user)
+
+
 class ExpenseForm(forms.ModelForm):
     new_category = forms.CharField(
         max_length=100,
