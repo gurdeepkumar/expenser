@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Expense, Category
-from .forms import ExpenseForm, FilterForm
+from .forms import ExpenseForm, RefiningForm
+from django.db.models import Q
 
 
 # Create your views here.
@@ -56,8 +57,8 @@ def list_expenses(request):
     categories = user.expense_set.values_list("category__name", flat=True).distinct()
 
     if (request.GET == {}) or ("clear_filters" in request.GET):
-        expenses = Expense.objects.filter(user=request.user)
-        form = FilterForm(user=request.user)
+        expenses = Expense.objects.filter(user=request.user).order_by("-created_at")
+        form = RefiningForm(user=request.user)
 
         return render(
             request,
@@ -66,19 +67,23 @@ def list_expenses(request):
         )
     elif "filter" in request.GET:
         expenses = Expense.objects.filter(user=request.user)
-        form = FilterForm(request.GET, user=request.user)
+        form = RefiningForm(request.GET, user=request.user)
 
         # Get filter values from request
-        selected_categories = request.GET.getlist(
+        selected_categories_ids = request.GET.getlist(
             "category"
         )  # Get multiple selected categories
         min_amount = request.GET.get("min_amount")
         max_amount = request.GET.get("max_amount")
         start_date = request.GET.get("from_date")
         end_date = request.GET.get("to_date")
-
         # Apply filters if values are provided
-        if selected_categories:
+        if selected_categories_ids:
+            selected_categories = []
+            for category_id in selected_categories_ids:
+                selected_categories.append(
+                    Category.objects.filter(id=category_id).first()
+                )
             expenses = expenses.filter(
                 category__name__in=selected_categories
             )  # Filter by multiple categories
@@ -91,24 +96,18 @@ def list_expenses(request):
         if end_date:
             expenses = expenses.filter(date__lte=end_date)
 
-        categories = user.expense_set.values_list(
-            "category__name", flat=True
-        ).distinct()
-
         return render(
             request,
             "expenses/list_expenses.html",
             {
                 "expenses": expenses,
                 "categories": categories,
-                "selected_categories": selected_categories,
                 "form": form,
             },
         )
     elif "sort" in request.GET:
-        sort_by = request.GET.get("sort-by")
-        form = FilterForm(user=request.user)
-
+        sort_by = request.GET.get("sort_by")
+        form = RefiningForm(user=request.user)
         match sort_by:
             case "title":
                 sorted_expenses = Expense.objects.filter(user=request.user).order_by(
@@ -127,7 +126,9 @@ def list_expenses(request):
                     "date"
                 )
             case "":
-                sorted_expenses = Expense.objects.filter(user=request.user)
+                sorted_expenses = Expense.objects.filter(user=request.user).order_by(
+                    "-created_at"
+                )
 
         return render(
             request,
@@ -141,7 +142,21 @@ def list_expenses(request):
         )
 
     elif "search" in request.GET:
-        ...
+        form = RefiningForm(request.GET, user=request.user)
+        search_input = request.GET.get("search_input")
+        searched_expenses = Expense.objects.filter(
+            Q(title__icontains=search_input) | Q(category__name__icontains=search_input)
+        )
+
+        return render(
+            request,
+            "expenses/list_expenses.html",
+            {
+                "expenses": searched_expenses,
+                "categories": categories,
+                "form": form,
+            },
+        )
 
 
 @login_required

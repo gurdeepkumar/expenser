@@ -10,7 +10,7 @@
     <p><strong>Amount:</strong> €{{ expense.amount }}</p>
     <p><strong>Category:</strong> {{ expense.category.name }}</p>
     <p><strong>Date:</strong> {{ expense.date }}</p>
-    <p><strong>Description:</strong> {{ expense.description }}</p>
+    <p><strong>Description:</strong> {% if expense.description == "" %} No description for this expense. {% else %} {{ expense.description }} {% endif %}</p>
 </div>
 
 <div class="row g-3">

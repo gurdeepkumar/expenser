@@ -2,11 +2,7 @@ from django import forms
 from .models import Expense, Category
 
 
-class FilterForm(forms.Form):
-    from django import forms
-
-
-class FilterForm(forms.Form):
+class RefiningForm(forms.Form):
 
     min_amount = forms.DecimalField(
         required=False,
@@ -28,15 +24,34 @@ class FilterForm(forms.Form):
     to_date = forms.DateField(
         required=False, widget=forms.DateInput(attrs={"type": "date"})
     )
-    category = forms.CharField(
-        required=False, widget=forms.TextInput(attrs={"placeholder": "Category"})
+    category = forms.ModelMultipleChoiceField(
+        queryset=Category.objects.all(),
+        label="Category",
+        required=False,
+    )
+    search_input = forms.CharField(
+        required=False, widget=forms.TextInput(attrs={"placeholder": "Search..."})
+    )
+
+    sort_types = [
+        ("", "Sort By"),
+        ("title", "Title"),
+        ("amount", "Amount"),
+        ("category", "Category"),
+        ("date", "Date"),
+    ]
+
+    sort_by = forms.ChoiceField(
+        choices=sort_types,
+        required=False,
+        label="sort_by",
     )
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user")
         super().__init__(*args, **kwargs)
 
-        # Fetch predefined categories + categories created by the user
+        # Fetch predefined categories + categories created by the user + sorting fields
         if self.user:
             self.fields["category"].queryset = Category.objects.filter(
                 predefined=True

@@ -8,19 +8,13 @@
 <form method="get">
     <div class="row g-3">
         <div class="col-md-2">
-            <input type="text" name="search-input" class="form-control search-input" placeholder="Search...">
+            {{ form.search_input|add_class:"form-control" }}
         </div>
         <div class="col-md-2 d-grid">
             <button name="search" class="btn btn-primary">Serach</button>
         </div>
         <div class="col-md-3">
-            <select class="selectpicker form-control" name="sort-by">
-                <option value="" {% if not sort_by %} selected {% endif %}>Select Category</option>
-                <option value="title" {% if sort_by and sort_by == "title" %} selected {% endif %}>Title</option>
-                <option value="amount" {% if sort_by and sort_by == "amount" %} selected {% endif %}>Amount</option>
-                <option value="category" {% if sort_by and sort_by == "category" %} selected {% endif %}>Category</option>
-                <option value="date" {% if sort_by and sort_by == "date" %} selected {% endif %}>Date</option>
-            </select>
+            {{ form.sort_by|add_class:"form-control selectpicker" }}
         </div>
         <div class="col-md-2 d-grid">
             <button class="btn btn-primary" name="sort">Sort By</button>
@@ -53,11 +47,7 @@
                 <div class="col-md-4 my-2">
                     <div class="form-group col-md-12">
                         <label>Category:</label>
-                        <select class="selectpicker form-control" name="category" multiple>
-                            {% for cat in categories %}
-                                <option value="{{ cat }}" {% if cat in selected_categories %} selected {% endif %}>{{ cat }}</option>
-                            {% endfor %}
-                        </select>
+                        {{ form.category|add_class:"selectpicker form-control" }}
                     </div> 
                     <div class="row my-2">
                         <div class="form-group col-md-6">
@@ -76,13 +66,13 @@
 </form>
 
 
-<table class="table table-hover">
+<table class="table table-hover my-3">
     <thead>
-        <tr>
-            <th>Title</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Expense Date</th>
+        <tr class="table-dark">
+            <th>Title {% if sort_by and sort_by == "title" %} ▲ {% endif %}</th>
+            <th>Amount {% if sort_by and sort_by == "amount" %} ▲ {% endif %}</th>
+            <th>Category {% if sort_by and sort_by == "category" %} ▲ {% endif %}</th>
+            <th>Expense Date {% if sort_by and sort_by == "date" %} ▲ {% endif %}</th>
             <th>Created On</th>
         </tr>
     </thead>
