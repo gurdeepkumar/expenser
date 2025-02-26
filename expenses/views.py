@@ -52,16 +52,11 @@ def add_expense(request):
 
 @login_required
 def list_expenses(request):
+    user = request.user
+    categories = user.expense_set.values_list("category__name", flat=True).distinct()
 
     if (request.GET == {}) or ("clear_filters" in request.GET):
-        print("this is initial")
-        print(request.GET)
-        user = request.user
         expenses = Expense.objects.filter(user=request.user)
-        categories = user.expense_set.values_list(
-            "category__name", flat=True
-        ).distinct()
-
         form = FilterForm(user=request.user)
 
         return render(
@@ -70,9 +65,6 @@ def list_expenses(request):
             {"expenses": expenses, "categories": categories, "form": form},
         )
     elif "filter" in request.GET:
-        print("this is with filters")
-        print(request.GET)
-        user = request.user
         expenses = Expense.objects.filter(user=request.user)
         form = FilterForm(request.GET, user=request.user)
 
@@ -140,7 +132,12 @@ def list_expenses(request):
         return render(
             request,
             "expenses/list_expenses.html",
-            {"expenses": sorted_expenses, "sort_by": sort_by, "form": form},
+            {
+                "expenses": sorted_expenses,
+                "categories": categories,
+                "sort_by": sort_by,
+                "form": form,
+            },
         )
 
     elif "search" in request.GET:
