@@ -5,64 +5,75 @@
 <div class="mt-3 mb-3">
     <h2>All Expenses </h2>
 </div>
-<div class="row">
-    <div class="col-md-4 mb-2 mt-2">
-        <input type="text" class="form-control search-input" placeholder="Search...">
-    </div>
-    <div class="col-md-4 mb-2 mt-2 d-grid">
-        <button class="btn btn-primary">Serach</button>
-    </div>
-    <div class="col-md-4 d-grid mb-2 mt-2 justify-content-md-end">
-        <button id="filterToggleBtn" class="btn btn-secondary">Show Filter Option</button>
-    </div>
-</div>
-
-<div id="filterOptions" {%if not request.GET %} style="display: none;" {% else %} style="display: block;" {%endif%} >
-    <form method="get" class="row">
-        <div class="col-md-4">
-            <div class="form-group my-2">
-                <label for="min_amount">Min Amount:</label>
-                {{ form.min_amount|add_class:"form-control" }}
-            </div> 
-            <div class="form-group my-2">
-                <label for="max_amount">Max Amount:</label>
-                {{ form.max_amount|add_class:"form-control" }}
-            </div> 
+<form method="get">
+    <div class="row g-3">
+        <div class="col-md-2">
+            <input type="text" name="search-input" class="form-control search-input" placeholder="Search...">
         </div>
-
-        <div class="col-md-4">
-            <div class="form-group my-2">
-                <label for="from_date">From:</label>
-                {{ form.from_date|add_class:"form-control" }}
-            </div> 
-            <div class="form-group my-2">
-                <label for="to_date">To:</label>
-                {{ form.to_date|add_class:"form-control" }}
-            </div> 
+        <div class="col-md-2 d-grid">
+            <button name="search" class="btn btn-primary">Serach</button>
         </div>
-
-        <div class="col-md-4 my-2">
-            <div class="form-group col-md-12">
-                <label>Category:</label>
-                <select class="selectpicker form-control" name="category" multiple>
-                    {% for cat in categories %}
-                        <option value="{{ cat }}" {% if cat in selected_categories %} selected {% endif %}>{{ cat }}</option>
-                    {% endfor %}
-                </select>
-            </div> 
-            <div class="row my-2">
-                <div class="form-group col-md-6">
-                    <label></label>
-                    <button type="submit" name="clear_filters" class="btn btn-warning form-control">Clear</button>
+        <div class="col-md-3">
+            <select class="selectpicker form-control" name="sort-by">
+                <option value="" {% if not sort_by %} selected {% endif %}>Select Category</option>
+                <option value="title" {% if sort_by and sort_by == "title" %} selected {% endif %}>Title</option>
+                <option value="amount" {% if sort_by and sort_by == "amount" %} selected {% endif %}>Amount</option>
+                <option value="category" {% if sort_by and sort_by == "category" %} selected {% endif %}>Category</option>
+                <option value="date" {% if sort_by and sort_by == "date" %} selected {% endif %}>Date</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-grid">
+            <button class="btn btn-primary" name="sort">Sort By</button>
+        </div>
+        <div class="col-md-3 d-grid">
+            <a id="filterToggleBtn" class="btn btn-secondary">Show Filter Option</a>
+        </div>
+        <div id="filterOptions" {%if "clear_filter" in request.GET or "filter" in request.GET %} style="display: block;" {% else %} style="display: none;" {%endif%} >
+            <div class="row">    
+                <div class="col-md-4">
+                    <div class="form-group my-2">
+                        <label for="min_amount">Min Amount:</label>
+                        {{ form.min_amount|add_class:"form-control" }}
+                    </div> 
+                    <div class="form-group my-2">
+                        <label for="max_amount">Max Amount:</label>
+                        {{ form.max_amount|add_class:"form-control" }}
+                    </div> 
                 </div>
-                <div class="form-group col-md-6">
-                    <label></label>
-                    <button type="submit" class="btn btn-primary form-control">Filter</button>
-                </div> 
-            </div>
-        </div>        
-    </form>
-</div>
+                <div class="col-md-4">
+                    <div class="form-group my-2">
+                        <label for="from_date">From:</label>
+                        {{ form.from_date|add_class:"form-control" }}
+                    </div> 
+                    <div class="form-group my-2">
+                        <label for="to_date">To:</label>
+                        {{ form.to_date|add_class:"form-control" }}
+                    </div> 
+                </div>
+                <div class="col-md-4 my-2">
+                    <div class="form-group col-md-12">
+                        <label>Category:</label>
+                        <select class="selectpicker form-control" name="category" multiple>
+                            {% for cat in categories %}
+                                <option value="{{ cat }}" {% if cat in selected_categories %} selected {% endif %}>{{ cat }}</option>
+                            {% endfor %}
+                        </select>
+                    </div> 
+                    <div class="row my-2">
+                        <div class="form-group col-md-6">
+                            <label></label>
+                            <button type="submit" name="clear_filters" class="btn btn-warning form-control">Clear</button>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label></label>
+                            <button type="submit" name="filter" class="btn btn-primary form-control">Filter</button>
+                        </div> 
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+</form>
 
 
 <table class="table table-hover">
@@ -71,8 +82,8 @@
             <th>Title</th>
             <th>Amount</th>
             <th>Category</th>
-            <th>Date</th>
-            <th>Added By</th>
+            <th>Expense Date</th>
+            <th>Created On</th>
         </tr>
     </thead>
     <tbody>
@@ -82,7 +93,7 @@
             <td>€{{ expense.amount }}</td>
             <td>{{ expense.category.name }}</td>
             <td>{{ expense.date }}</td>
-            <td>{{ expense.user.username | title }}</td>
+            <td>{{ expense.created_at|date:"M. d, Y" }}</td>
         </tr>
         {% empty %}
         <tr>
