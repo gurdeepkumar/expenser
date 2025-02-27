@@ -107,28 +107,54 @@ def list_expenses(request):
         )
     elif "sort" in request.GET:
         sort_by = request.GET.get("sort_by")
-        form = RefiningForm(user=request.user)
+        sort_order = request.GET.get("sort_order")
+        form = RefiningForm(request.GET, user=request.user)
         match sort_by:
             case "title":
-                sorted_expenses = Expense.objects.filter(user=request.user).order_by(
-                    "title"
-                )
+                if sort_order == "ascending":
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("title")
+                else:
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("-title")
             case "amount":
-                sorted_expenses = Expense.objects.filter(user=request.user).order_by(
-                    "amount"
-                )
+                if sort_order == "ascending":
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("amount")
+                else:
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("-amount")
             case "category":
-                sorted_expenses = Expense.objects.filter(user=request.user).order_by(
-                    "category__name"
-                )
+                if sort_order == "ascending":
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("category__name")
+                else:
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("-category__name")
             case "date":
-                sorted_expenses = Expense.objects.filter(user=request.user).order_by(
-                    "date"
-                )
+                if sort_order == "ascending":
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("date")
+                else:
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("-date")
             case "":
-                sorted_expenses = Expense.objects.filter(user=request.user).order_by(
-                    "-created_at"
-                )
+                if sort_order == "ascending":
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("created_at")
+                else:
+                    sorted_expenses = Expense.objects.filter(
+                        user=request.user
+                    ).order_by("-created_at")
 
         return render(
             request,
@@ -136,6 +162,7 @@ def list_expenses(request):
             {
                 "expenses": sorted_expenses,
                 "categories": categories,
+                "sort_order": sort_order,
                 "sort_by": sort_by,
                 "form": form,
             },

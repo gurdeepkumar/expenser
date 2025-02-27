@@ -6,21 +6,23 @@
 {% block content %}
 <h2>Register</h2>
 
-<form method="post"> 
+<form method="post" class="row col-md-6 g-3"> 
     {% csrf_token %}
-    <div class="form-group mt-3 mb-3">
-        <label for="{{ form.username.id_for_label }}">Username</label>
+    <div class="form-group">
+        {{ form.username.label_tag }}
         {{ form.username|add_class:"form-control" }}
     </div>
-    <div class="form-group mt-3 mb-3">
-        <label for="{{ form.password1.id_for_label }}">Password</label>
+    <div class="form-group">
+        {{ form.password1.label_tag }}
         {{ form.password1|add_class:"form-control" }}
     </div>
-    <div class="form-group mt-3 mb-3">
-        <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+    <div class="form-group">
+        {{ form.password2.label_tag }}
         {{ form.password2|add_class:"form-control" }}
     </div>
-    <button type="submit" class="btn btn-primary">Register</button>
+    <div class="form-group d-grid col-md-6">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
 </form>
 
 {% endblock %}

@@ -7,17 +7,19 @@
 
 <h2>Login</h2>
 
-<form method="post">
+<form method="post" class="row g-3 col-md-6">
     {% csrf_token %}
-    <div class="form-group mt-3 mb-3">
-        <label for="{{ form.username.id_for_label }}">Username</label>
+    <div class="form-group">
+        {{ form.username.label_tag }}
         {{ form.username|add_class:"form-control" }}
     </div>
-    <div class="form-group mt-3 mb-3">
-        <label for="{{ form.password1.id_for_label }}">Password</label>
+    <div class="form-group">
+        {{ form.password.label_tag }}
         {{ form.password|add_class:"form-control" }}
     </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+    <div class="col-md-6 d-grid">
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
 </form>
 
 {% endblock %}

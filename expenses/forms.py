@@ -34,17 +34,28 @@ class RefiningForm(forms.Form):
     )
 
     sort_types = [
-        ("", "Sort By"),
+        ("", "Created On"),
         ("title", "Title"),
         ("amount", "Amount"),
         ("category", "Category"),
-        ("date", "Date"),
+        ("date", "Expense Date"),
     ]
 
     sort_by = forms.ChoiceField(
         choices=sort_types,
         required=False,
         label="sort_by",
+    )
+
+    sort_order_types = [
+        ("decending", "Decending"),
+        ("ascending", "Ascending"),
+    ]
+
+    sort_order = forms.ChoiceField(
+        choices=sort_order_types,
+        required=False,
+        label="sort_order",
     )
 
     def __init__(self, *args, **kwargs):
@@ -62,9 +73,8 @@ class ExpenseForm(forms.ModelForm):
     new_category = forms.CharField(
         max_length=100,
         required=False,
-        widget=forms.TextInput(
-            attrs={"placeholder": "Enter a new category (optional)"}
-        ),
+        label="New Category (Optional)",
+        widget=forms.TextInput(attrs={"placeholder": "New category"}),
     )
 
     class Meta:

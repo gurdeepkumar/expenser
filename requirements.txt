@@ -1,2 +1,2 @@
-#for editing built in widgets
+#for editing built in widgets for html
 django-widget-tweaks

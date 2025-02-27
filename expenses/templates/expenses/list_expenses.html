@@ -13,11 +13,14 @@
         <div class="col-md-2 d-grid">
             <button name="search" class="btn btn-primary">Serach</button>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             {{ form.sort_by|add_class:"form-control selectpicker" }}
         </div>
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-primary" name="sort">Sort By</button>
+        <div class="col-md-2">
+            {{ form.sort_order|add_class:"form-control selectpicker" }}
+        </div>
+        <div class="col-md-1 d-grid">
+            <button class="btn btn-primary" name="sort">Sort</button>
         </div>
         <div class="col-md-3 d-grid">
             <a id="filterToggleBtn" class="btn btn-secondary">Show Filter Option</a>
@@ -26,27 +29,27 @@
             <div class="row">    
                 <div class="col-md-4">
                     <div class="form-group my-2">
-                        <label for="min_amount">Min Amount:</label>
+                        {{ form.min_amount.label_tag }}
                         {{ form.min_amount|add_class:"form-control" }}
                     </div> 
                     <div class="form-group my-2">
-                        <label for="max_amount">Max Amount:</label>
+                        {{ form.max_amount.label_tag }}
                         {{ form.max_amount|add_class:"form-control" }}
                     </div> 
                 </div>
                 <div class="col-md-4">
                     <div class="form-group my-2">
-                        <label for="from_date">From:</label>
+                        {{ form.from_date.label_tag }}
                         {{ form.from_date|add_class:"form-control" }}
                     </div> 
                     <div class="form-group my-2">
-                        <label for="to_date">To:</label>
+                        {{ form.to_date.label_tag }}
                         {{ form.to_date|add_class:"form-control" }}
                     </div> 
                 </div>
                 <div class="col-md-4 my-2">
                     <div class="form-group col-md-12">
-                        <label>Category:</label>
+                        {{ form.category.label_tag }}
                         {{ form.category|add_class:"selectpicker form-control" }}
                     </div> 
                     <div class="row my-2">
@@ -69,17 +72,17 @@
 <table class="table table-hover my-3">
     <thead>
         <tr class="table-dark">
-            <th>Title {% if sort_by and sort_by == "title" %} ▲ {% endif %}</th>
-            <th>Amount {% if sort_by and sort_by == "amount" %} ▲ {% endif %}</th>
-            <th>Category {% if sort_by and sort_by == "category" %} ▲ {% endif %}</th>
-            <th>Expense Date {% if sort_by and sort_by == "date" %} ▲ {% endif %}</th>
-            <th>Created On</th>
+            <th>Title {% if sort_by and sort_by == "title" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+            <th>Amount {% if sort_by and sort_by == "amount" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+            <th>Category {% if sort_by and sort_by == "category" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+            <th>Expense Date {% if sort_by and sort_by == "date" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+            <th>Created On {% if not sort_by or sort_by == "" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
         </tr>
     </thead>
     <tbody>
         {% for expense in expenses %}
-        <tr>
-            <td><a href="{% url 'view_expense' expense.id %}" class="text-dark">{{ expense.title }}</a></td>
+        <tr data-href="{% url 'view_expense' expense.id %}" style="cursor: pointer;">
+            <td>{{ expense.title }}</td>
             <td>€{{ expense.amount }}</td>
             <td>{{ expense.category.name }}</td>
             <td>{{ expense.date }}</td>
