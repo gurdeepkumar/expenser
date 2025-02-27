@@ -25,7 +25,7 @@
                             <a class="nav-link" href="{% url 'add_expenses' %}">Add Expense</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'password_change' %}">{{ request.user.username|title }}</a>
+                            <a class="nav-link" href="{% url 'password_change' %}">Account</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
@@ -43,30 +43,28 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="container my-4">
+        <!-- Messages and errors display -->
         {% if messages %}
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {% for message in messages %}
                     {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endif %}
-
         {% if form.errors %}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {% for key,value in form.errors.items %}
+                {% for key, value in form.errors.items %}
                     {{ value }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endif %}
-        
-        {% block content %}{% endblock %}
+        <!-- Container for apps -->
+        <div class="container mb-5">
+            {% block content %}{% endblock %}
+        </div>
     </div>
 
     <footer class="footer fixed-bottom bg-dark">

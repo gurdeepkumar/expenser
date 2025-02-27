@@ -5,22 +5,29 @@
 
 {% block content %}
 
-<h2>Login</h2>
-
-<form method="post" class="row g-3 col-md-6">
-    {% csrf_token %}
-    <div class="form-group">
-        {{ form.username.label_tag }}
-        {{ form.username|add_class:"form-control" }}
+<div class="row">
+    <div class="col-md-6">
+        <h1>Login to Expenser</h1>
+        <p class="text-justify">Welcome back to Expenser! Please enter your credentials to access your personal expense tracker. With Expenser, you can manage your expenses efficiently and gain insights into your spending habits.</p>
+        <p class="text-justify"><strong>If you don't have an account yet, you can sign up <a href="{% url 'register' %}">here</a>.</strong></p>
     </div>
-    <div class="form-group">
-        {{ form.password.label_tag }}
-        {{ form.password|add_class:"form-control" }}
-    </div>
-    <div class="col-md-6 d-grid">
-        <button type="submit" class="btn btn-primary">Login</button>
-    </div>
-</form>
+    <form method="post" class="col-md-6">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username|add_class:"form-control" }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label_tag }}
+                {{ form.password|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 d-grid">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 {% endblock %}
 

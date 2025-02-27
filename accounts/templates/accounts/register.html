@@ -1,28 +1,38 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
-
 {% block title %}Register{% endblock %}
-
 {% block content %}
-<h2>Register</h2>
-
-<form method="post" class="row col-md-6 g-3"> 
-    {% csrf_token %}
-    <div class="form-group">
-        {{ form.username.label_tag }}
-        {{ form.username|add_class:"form-control" }}
+<div class="row">
+    <div class="col-md-6">
+        <h1>Sign Up for Expenser</h1>
+        <p class="text-justify">Welcome to Expenser, your personal expense tracker! Join our community and take control of your finances. With Expenser, you can easily track your expenses, categorize them, and stay on top of your budget.</p>
+        <p class="text-justify"><strong>Create your account today to enjoy these features:</strong></p>
+        <ul class="list-group mb-4 list-group-flush">
+            <li class="list-group-item">Effortless expense management</li>
+            <li class="list-group-item">Customized categories for your spending</li>
+            <li class="list-group-item">Detailed expense reports and insights</li>
+            <li class="list-group-item">Secure user authentication</li>
+        </ul>
     </div>
-    <div class="form-group">
-        {{ form.password1.label_tag }}
-        {{ form.password1|add_class:"form-control" }}
-    </div>
-    <div class="form-group">
-        {{ form.password2.label_tag }}
-        {{ form.password2|add_class:"form-control" }}
-    </div>
-    <div class="form-group d-grid col-md-6">
-        <button type="submit" class="btn btn-primary">Register</button>
-    </div>
-</form>
-
+    <form method="post" class="col-md-6">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="form-group col-md-12">
+                {{ form.username.label_tag }}
+                {{ form.username|add_class:"form-control" }}
+            </div>
+            <div class="form-group col-md-12">
+                {{ form.password1.label_tag }}
+                {{ form.password1|add_class:"form-control" }}
+            </div>
+            <div class="form-group col-md-12">
+                {{ form.password2.label_tag }}
+                {{ form.password2|add_class:"form-control" }}
+            </div>
+            <div class="form-group d-grid col-md-6">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
