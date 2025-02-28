@@ -1,9 +1,81 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}Expenser{% endblock %}
 
 {% block content %}
+<div class="row">
+    <h1>Hey, <small class="text-muted">{{ request.user|title }}</small></h1>
+    <p class="lead">Expenser is your personal expense tracker, designed to help you understand where your money is going. Use these charts to track your spending, set budgets, and make informed decisions to improve your financial health.</p>
+</div>
 
-<h2>Home page with charts</h2>
+{% if expenses %}
+    <div class="container my-5">
+        <ul class="nav nav-fill nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">📊 Monthly Expenses Overview</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">📈 Spending Trend Over Time</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">🍕 Expense Breakdown by Category</button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="myTabContent">
+
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row g-3">
+                    <div class="col-md-6 align-self-center">
+                        <p>Track your **total spending per month**. Use this chart to see which months had the highest expenses and identify trends in your financial behavior.</p>
+                    </div>
+                    <div class="col-md-6 align-self-center">
+                        <canvas id="monthlyExpenseChart"></canvas>
+                        <!-- Store JSON data inside script tags for JavaScript to access -->
+                        <script id="chartLabelsBar" type="application/json">{{ chart_labels_bar|safe }}</script>
+                        <script id="chartValuesBar" type="application/json">{{ chart_values_bar|safe }}</script>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="row g-3">
+                    <div class="col-md-6 align-self-center">
+                        <p>Understand how your **daily spending fluctuates** over time. This helps you analyze whether you are spending consistently or if there are peak spending days.</p>
+                    </div>
+                    <div class="col-md-6 align-self-center">
+                        <canvas id="spendingTrendChart"></canvas>
+                        <!-- Store JSON data inside script tags for JavaScript to access -->
+                        <script id="chartLabelsLine" type="application/json">{{ chart_labels_line|safe }}</script>
+                        <script id="chartValuesLine" type="application/json">{{ chart_values_line|safe }}</script>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="row">
+                    <div class="col-md-7 align-self-center">
+                        <p>See where your money goes! This chart displays the **percentage of expenses** in different categories (e.g., Food, Rent, Entertainment), helping you balance your budget.</p>
+                    </div>
+                    <div class="col-md-5 align-self-center">
+                        <canvas id="expenseChart"></canvas>
+                        <!-- Store JSON data inside script tags for JavaScript to access -->
+                        <script id="chartLabels" type="application/json">{{ chart_labels|safe }}</script>
+                        <script id="chartValues" type="application/json">{{ chart_values|safe }}</script>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Load the external JS file -->
+    <script src="{% static 'core/charts.js' %}"></script>
+
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        If the <strong>charts are not displaying</strong>, it means that no expenses have been recorded for your account yet. Please add some expenses to see the visual breakdown of your spending.
+    </div>
+{% endif %}
 
 {% endblock %}
