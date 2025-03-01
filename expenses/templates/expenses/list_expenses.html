@@ -2,70 +2,90 @@
 {% load widget_tweaks %}
 {% block title %}View Expenses{% endblock %}
 
+{% block head %}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+{% endblock %}
+
 {% block content %}
-<div class="mt-3 mb-3">
+
+<div class="row">
     <h2>All Expenses </h2>
 </div>
+<div class="row g-3 mb-3">
+    <div class="col-md-8 rounded py-2 text-white bg-dark text-center align-self-center">
+        <strong>Total spending for following expenses is: €{{ total_expenses }}</strong> 
+    </div>
+    <div class="col-md-4">
+        <a id="filterToggleBtn" class="btn d-grid btn-secondary">Show Filter Option</a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <form method="get" class="col-md-6">
+        <div class="row g-3">
+            <div class="col-md-6">
+                {{ search_form.search_input|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 d-grid">
+                <button name="search" class="btn btn-primary">Serach</button>
+            </div>
+        </div>
+    </form>
+    <form method="get" class="col-md-6">
+        <div class="row g-3">
+            <div class="col-md-5">
+                {{ sort_form.sort_by|add_class:"form-control selectpicker" }}
+            </div>
+            <div class="col-md-5">
+                {{ sort_form.sort_order|add_class:"form-control selectpicker" }}
+            </div>
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-primary" name="sort">Sort</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <form method="get">
-    <div class="row g-3">
-        <div class="col-md-2">
-            {{ form.search_input|add_class:"form-control" }}
-        </div>
-        <div class="col-md-2 d-grid">
-            <button name="search" class="btn btn-primary">Serach</button>
-        </div>
-        <div class="col-md-2">
-            {{ form.sort_by|add_class:"form-control selectpicker" }}
-        </div>
-        <div class="col-md-2">
-            {{ form.sort_order|add_class:"form-control selectpicker" }}
-        </div>
-        <div class="col-md-1 d-grid">
-            <button class="btn btn-primary" name="sort">Sort</button>
-        </div>
-        <div class="col-md-3 d-grid">
-            <a id="filterToggleBtn" class="btn btn-secondary">Show Filter Option</a>
-        </div>
-        <div id="filterOptions" {%if "clear_filter" in request.GET or "filter" in request.GET %} style="display: block;" {% else %} style="display: none;" {%endif%} >
-            <div class="row">    
-                <div class="col-md-4">
-                    <div class="form-group my-2">
-                        {{ form.min_amount.label_tag }}
-                        {{ form.min_amount|add_class:"form-control" }}
-                    </div> 
-                    <div class="form-group my-2">
-                        {{ form.max_amount.label_tag }}
-                        {{ form.max_amount|add_class:"form-control" }}
-                    </div> 
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group my-2">
-                        {{ form.from_date.label_tag }}
-                        {{ form.from_date|add_class:"form-control" }}
-                    </div> 
-                    <div class="form-group my-2">
-                        {{ form.to_date.label_tag }}
-                        {{ form.to_date|add_class:"form-control" }}
-                    </div> 
-                </div>
-                <div class="col-md-4 my-2">
-                    <div class="form-group col-md-12">
-                        {{ form.category.label_tag }}
-                        {{ form.category|add_class:"selectpicker form-control" }}
-                    </div> 
-                    <div class="row my-2">
-                        <div class="form-group col-md-6">
-                            <label></label>
-                            <button type="submit" name="clear_filters" class="btn btn-warning form-control">Clear</button>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label></label>
-                            <button type="submit" name="filter" class="btn btn-primary form-control">Filter</button>
-                        </div> 
+    <div id="filterOptions" {%if "clear_filter" in request.GET or "filter" in request.GET %} style="display: block;" {% else %} style="display: none;" {%endif%} >
+        <div class="row">    
+            <div class="col-md-4">
+                <div class="form-group my-2">
+                    {{ filter_form.min_amount.label_tag }}
+                    {{ filter_form.min_amount|add_class:"form-control" }}
+                </div> 
+                <div class="form-group my-2">
+                    {{ filter_form.max_amount.label_tag }}
+                    {{ filter_form.max_amount|add_class:"form-control" }}
+                </div> 
+            </div>
+            <div class="col-md-4">
+                <div class="form-group my-2">
+                    {{ filter_form.from_date.label_tag }}
+                    {{ filter_form.from_date|add_class:"form-control" }}
+                </div> 
+                <div class="form-group my-2">
+                    {{ filter_form.to_date.label_tag }}
+                    {{ filter_form.to_date|add_class:"form-control" }}
+                </div> 
+            </div>
+            <div class="col-md-4 my-2">
+                <div class="form-group col-md-12">
+                    {{ filter_form.category.label_tag }}
+                    {{ filter_form.category|add_class:"selectpicker form-control" }}
+                </div> 
+                <div class="row my-2">
+                    <div class="form-group col-md-6">
+                        <label></label>
+                        <button type="submit" name="clear_filters" class="btn btn-warning form-control">Clear</button>
                     </div>
+                    <div class="form-group col-md-6">
+                        <label></label>
+                        <button type="submit" name="filter" class="btn btn-primary form-control">Filter</button>
+                    </div> 
                 </div>
-            </div>  
-        </div>
+            </div>
+        </div>  
     </div>
 </form>
 

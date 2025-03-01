@@ -1,73 +1,40 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Expense, Category
-from .forms import ExpenseForm, RefiningForm
+from .forms import ExpenseForm, RefiningForm, SearchForm, SortForm
 from django.db.models import Q
 
 
 # Create your views here.
 @login_required
-def add_expense(request):
-    if request.method == "POST":
-        form = ExpenseForm(request.POST, user=request.user)
-        if form.is_valid():
-            expense = form.save(commit=False)
-            expense.user = request.user  # Assign expense to logged-in user
-
-            # Handle new category if provided
-            category_name = form.cleaned_data.get("category")
-            new_category_name = form.cleaned_data.get("new_category")
-            if category_name == None:
-                if (
-                    Category.objects.filter(
-                        name=new_category_name, predefined=True
-                    ).exists()
-                ) or (
-                    Category.objects.filter(
-                        name=new_category_name, user=request.user
-                    ).exists()
-                ):
-                    category = new_category_name
-                else:
-                    category, created = Category.objects.get_or_create(
-                        name=new_category_name, user=request.user, predefined=False
-                    )
-            else:
-                if Category.objects.filter(
-                    name=category_name, predefined=True
-                ).exists() or (
-                    Category.objects.filter(
-                        name=category_name, user=request.user
-                    ).exists()
-                ):
-                    category = category_name
-
-            expense.category = category
-            expense.save()
-            return redirect("list_expenses")  # Redirect after saving
-    else:
-        form = ExpenseForm(user=request.user)  # Pass user to form
-
-    return render(request, "expenses/add_expense.html", {"form": form})
-
-
-@login_required
 def list_expenses(request):
     user = request.user
     categories = user.expense_set.values_list("category__name", flat=True).distinct()
 
-    if (request.GET == {}) or ("clear_filters" in request.GET):
+    if request.GET == {} or ("clear_filters" in request.GET):
         expenses = Expense.objects.filter(user=request.user).order_by("-created_at")
-        form = RefiningForm(user=request.user)
+        search_form = SearchForm()
+        sort_form = SortForm()
+        filter_form = RefiningForm(user=request.user)
+        total_expenses = sum(expense.amount for expense in expenses)
 
         return render(
             request,
             "expenses/list_expenses.html",
-            {"expenses": expenses, "categories": categories, "form": form},
+            {
+                "expenses": expenses,
+                "categories": categories,
+                "total_expenses": total_expenses,
+                "search_form": search_form,
+                "sort_form": sort_form,
+                "filter_form": filter_form,
+            },
         )
     elif "filter" in request.GET:
-        expenses = Expense.objects.filter(user=request.user)
-        form = RefiningForm(request.GET, user=request.user)
+        filter_expenses = Expense.objects.filter(user=request.user)
+        search_form = SearchForm()
+        sort_form = SortForm()
+        filter_form = RefiningForm(request.GET, user=request.user)
 
         # Get filter values from request
         selected_categories_ids = request.GET.getlist(
@@ -84,31 +51,39 @@ def list_expenses(request):
                 selected_categories.append(
                     Category.objects.filter(id=category_id).first()
                 )
-            expenses = expenses.filter(
+            filter_expenses = filter_expenses.filter(
                 category__name__in=selected_categories
             )  # Filter by multiple categories
         if min_amount:
-            expenses = expenses.filter(amount__gte=min_amount)
+            filter_expenses = filter_expenses.filter(amount__gte=min_amount)
         if max_amount:
-            expenses = expenses.filter(amount__lte=max_amount)
+            filter_expenses = filter_expenses.filter(amount__lte=max_amount)
         if start_date:
-            expenses = expenses.filter(date__gte=start_date)
+            filter_expenses = filter_expenses.filter(date__gte=start_date)
         if end_date:
-            expenses = expenses.filter(date__lte=end_date)
+            filter_expenses = filter_expenses.filter(date__lte=end_date)
+
+        total_expenses = sum(expense.amount for expense in filter_expenses)
 
         return render(
             request,
             "expenses/list_expenses.html",
             {
-                "expenses": expenses,
+                "expenses": filter_expenses,
                 "categories": categories,
-                "form": form,
+                "total_expenses": total_expenses,
+                "search_form": search_form,
+                "sort_form": sort_form,
+                "filter_form": filter_form,
             },
         )
     elif "sort" in request.GET:
         sort_by = request.GET.get("sort_by")
         sort_order = request.GET.get("sort_order")
-        form = RefiningForm(request.GET, user=request.user)
+        search_form = SearchForm()
+        sort_form = SortForm(request.GET)
+        filter_form = RefiningForm(user=request.user)
+
         match sort_by:
             case "title":
                 if sort_order == "ascending":
@@ -156,6 +131,8 @@ def list_expenses(request):
                         user=request.user
                     ).order_by("-created_at")
 
+        total_expenses = sum(expense.amount for expense in sorted_expenses)
+
         return render(
             request,
             "expenses/list_expenses.html",
@@ -164,16 +141,25 @@ def list_expenses(request):
                 "categories": categories,
                 "sort_order": sort_order,
                 "sort_by": sort_by,
-                "form": form,
+                "total_expenses": total_expenses,
+                "search_form": search_form,
+                "sort_form": sort_form,
+                "filter_form": filter_form,
             },
         )
 
     elif "search" in request.GET:
-        form = RefiningForm(request.GET, user=request.user)
+        expenses = Expense.objects.filter(user=request.user)
+        search_form = SearchForm(request.GET)
+        sort_form = SortForm()
+        filter_form = RefiningForm(user=request.user)
+
         search_input = request.GET.get("search_input")
-        searched_expenses = Expense.objects.filter(
+        searched_expenses = expenses.filter(
             Q(title__icontains=search_input) | Q(category__name__icontains=search_input)
         )
+
+        total_expenses = sum(expense.amount for expense in searched_expenses)
 
         return render(
             request,
@@ -181,9 +167,58 @@ def list_expenses(request):
             {
                 "expenses": searched_expenses,
                 "categories": categories,
-                "form": form,
+                "search_input": search_input,
+                "total_expenses": total_expenses,
+                "search_form": search_form,
+                "sort_form": sort_form,
+                "filter_form": filter_form,
             },
         )
+
+
+@login_required
+def add_expense(request):
+    if request.method == "POST":
+        form = ExpenseForm(request.POST, user=request.user)
+        if form.is_valid():
+            expense = form.save(commit=False)
+            expense.user = request.user  # Assign expense to logged-in user
+
+            # Handle new category if provided
+            category_name = form.cleaned_data.get("category")
+            new_category_name = form.cleaned_data.get("new_category")
+            if category_name == None:
+                if (
+                    Category.objects.filter(
+                        name=new_category_name, predefined=True
+                    ).exists()
+                ) or (
+                    Category.objects.filter(
+                        name=new_category_name, user=request.user
+                    ).exists()
+                ):
+                    category = new_category_name
+                else:
+                    category, created = Category.objects.get_or_create(
+                        name=new_category_name, user=request.user, predefined=False
+                    )
+            else:
+                if Category.objects.filter(
+                    name=category_name, predefined=True
+                ).exists() or (
+                    Category.objects.filter(
+                        name=category_name, user=request.user
+                    ).exists()
+                ):
+                    category = category_name
+
+            expense.category = category
+            expense.save()
+            return redirect("list_expenses")  # Redirect after saving
+    else:
+        form = ExpenseForm(user=request.user)  # Pass user to form
+
+    return render(request, "expenses/add_expense.html", {"form": form})
 
 
 @login_required

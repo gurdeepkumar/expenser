@@ -75,6 +75,7 @@
 {% else %}
     <div class="alert alert-warning" role="alert">
         If the <strong>charts are not displaying</strong>, it means that no expenses have been recorded for your account yet. Please add some expenses to see the visual breakdown of your spending.
+        <a href="{% url 'add_expenses' %}" class="link-dark">Click here to add expense!</a>
     </div>
 {% endif %}
 

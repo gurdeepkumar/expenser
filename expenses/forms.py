@@ -2,8 +2,40 @@ from django import forms
 from .models import Expense, Category
 
 
-class RefiningForm(forms.Form):
+class SearchForm(forms.Form):
+    search_input = forms.CharField(
+        required=False, widget=forms.TextInput(attrs={"placeholder": "Search..."})
+    )
 
+
+class SortForm(forms.Form):
+    sort_types = [
+        ("", "Created On"),
+        ("title", "Title"),
+        ("amount", "Amount"),
+        ("category", "Category"),
+        ("date", "Expense Date"),
+    ]
+
+    sort_by = forms.ChoiceField(
+        choices=sort_types,
+        required=False,
+        label="sort_by",
+    )
+
+    sort_order_types = [
+        ("decending", "Decending"),
+        ("ascending", "Ascending"),
+    ]
+
+    sort_order = forms.ChoiceField(
+        choices=sort_order_types,
+        required=False,
+        label="sort_order",
+    )
+
+
+class RefiningForm(forms.Form):
     min_amount = forms.DecimalField(
         required=False,
         min_value=0,
@@ -28,34 +60,6 @@ class RefiningForm(forms.Form):
         queryset=Category.objects.all(),
         label="Category",
         required=False,
-    )
-    search_input = forms.CharField(
-        required=False, widget=forms.TextInput(attrs={"placeholder": "Search..."})
-    )
-
-    sort_types = [
-        ("", "Created On"),
-        ("title", "Title"),
-        ("amount", "Amount"),
-        ("category", "Category"),
-        ("date", "Expense Date"),
-    ]
-
-    sort_by = forms.ChoiceField(
-        choices=sort_types,
-        required=False,
-        label="sort_by",
-    )
-
-    sort_order_types = [
-        ("decending", "Decending"),
-        ("ascending", "Ascending"),
-    ]
-
-    sort_order = forms.ChoiceField(
-        choices=sort_order_types,
-        required=False,
-        label="sort_order",
     )
 
     def __init__(self, *args, **kwargs):
