@@ -9,7 +9,7 @@ Once you have registered and logged in, you can generate your token in the API s
 ### **Example of Authentication (Bearer Token)**
 
 ```text
-Authorization: Bearer YOUR_ACCESS_TOKEN
+  Authorization: Bearer YOUR_ACCESS_TOKEN
 
 
 ### **Error Codes**
