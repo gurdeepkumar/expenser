@@ -31,13 +31,16 @@
                 <ul class="navbar-nav ms-auto">
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'add_expenses' %}">Add Expense</a>
+                            <a class="nav-link" href="{% url 'add_expenses' %}">Add New</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'list_expenses' %}">View Expenses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'visual_expenses' %}">Visualize Expenses</a>
+                            <a class="nav-link" href="{% url 'visual_expenses' %}">Visualize</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'exporter' %}">Export</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'password_change' %}">Account</a>

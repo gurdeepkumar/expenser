@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "core",
     "accounts",
     "expenses",
+    "exporter",
 ]
 
 LOGIN_REDIRECT_URL = "home"  # Redirect after login

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block head %}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+{% endblock %}
+{% block title %}Export Expenses{% endblock %}
+
+{% block content %}
+<div class="row">
+    <h2>Export Expenses</h2>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="row">    
+        <div class="col-md-4">
+            <div class="form-group my-2">
+                {{ filter_form.from_date.label_tag }}
+                {{ filter_form.from_date|add_class:"form-control" }}
+            </div> 
+            <div class="form-group my-2">
+                {{ filter_form.to_date.label_tag }}
+                {{ filter_form.to_date|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group my-2">
+                {{ filter_form.min_amount.label_tag }}
+                {{ filter_form.min_amount|add_class:"form-control" }}
+            </div> 
+            <div class="form-group my-2">
+                {{ filter_form.max_amount.label_tag }}
+                {{ filter_form.max_amount|add_class:"form-control" }}
+            </div> 
+        </div>
+        <div class="col-md-4 my-2">
+            <div class="form-group col-md-12">
+                {{ filter_form.category.label_tag }}
+                {{ filter_form.category|add_class:"selectpicker form-control" }}
+            </div> 
+            <div class="row my-2">
+                <div class="form-group col-md-6">
+                    {{ filter_form.export_as.label_tag }}
+                    {{ filter_form.export_as|add_class:"selectpicker form-control" }}
+                </div>
+                <div class="form-group col-md-6">
+                    <label></label>
+                    <button type="submit" name="filter" class="btn btn-primary form-control">Export</button>
+                </div> 
+            </div>
+        </div>
+    </div>  
+</form>
+
+
+{% endblock %}

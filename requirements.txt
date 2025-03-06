@@ -1,2 +1,8 @@
 #for editing built in widgets for html
 django-widget-tweaks
+
+#for exporting expenses as pdf
+reportlab
+
+#for exporting expenses as export
+openpyxl
