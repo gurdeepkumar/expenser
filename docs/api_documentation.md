@@ -21,7 +21,7 @@ Once you have registered and logged in, you can generate your token in the API s
 
 ### **1. Get All Expenses**
 
-- **URL**: `/expenses/`
+- **URL**: `/expenses/api/expenses/`
 - **Method**: `GET`
 - **Description**: Retrieve all expenses for the authenticated user.
 - **Response**:
@@ -52,7 +52,7 @@ Once you have registered and logged in, you can generate your token in the API s
 
 ### **2. Create Expense**
 
-- **URL**: `/expenses/`
+- **URL**: `/expenses/api/expenses/create/`
 - **Method**: `POST`
 - **Description**: Create a new expense.
 - **Body (JSON)**:
@@ -82,7 +82,7 @@ Once you have registered and logged in, you can generate your token in the API s
 
 ### **3. Get Expense Detail**
 
-- **URL**: `/expenses/{id}/`
+- **URL**: `/expenses/api/expenses/<int:pk>/`
 - **Method**: `GET`
 - **Description**: Retrieve the details of a specific expense by its ID.
 - **Response**:
@@ -103,7 +103,7 @@ Once you have registered and logged in, you can generate your token in the API s
 
 ### **4. Update Expense**
 
-- **URL**: `/expenses/{id}/`
+- **URL**: `/expenses/api/expenses/<int:pk>/update/`
 - **Method**: `PUT`
 - **Description**: Update an existing expense by its ID.
 - **Body (JSON)**:
@@ -133,7 +133,7 @@ Once you have registered and logged in, you can generate your token in the API s
 
 ### **5. Delete Expense**
 
-- **URL**: `/expenses/{id}/`
+- **URL**: `api/expenses/<int:pk>/delete/`
 - **Method**: `DELETE`
 - **Description**: Delete an expense by its ID.
 - **Response**:
