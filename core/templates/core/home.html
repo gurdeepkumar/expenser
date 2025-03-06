@@ -3,10 +3,19 @@
 {% block title %}Expenser{% endblock %}
 
 {% block content %}
+{% if show_welcome %}
+    <div class="row">
+        <h1>Hey, <small class="text-muted">{{ request.user|title }}</small></h1>
+        <p class="lead">Expenser is your personal expense tracker, designed to help you understand where your money is going. Use these charts to track your spending, set budgets, and make informed decisions to improve your financial health.</p>
+    </div>
+{% else %}
 <div class="row">
-    <h1>Hey, <small class="text-muted">{{ request.user|title }}</small></h1>
-    <p class="lead">Expenser is your personal expense tracker, designed to help you understand where your money is going. Use these charts to track your spending, set budgets, and make informed decisions to improve your financial health.</p>
+    <h1>Visualize Your Expenses with Interactive Charts</h1>
+    <p class="lead">Gain insights into your spending habits through intuitive and interactive charts. Analyze your expenses by category, track trends over time, and make informed financial decisions effortlessly.
+    </p>
 </div>
+{% endif %}
+
 
 {% if expenses %}
     <div class="container my-5">

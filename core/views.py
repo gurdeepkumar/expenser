@@ -2,13 +2,14 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from expenses.models import Expense
 import json
-from django.db.models import Sum
-from datetime import datetime
+from django.urls import resolve
 
 
 # Create your views here.
 @login_required
 def home(request):
+    current_url_name = resolve(request.path_info).url_name  # Get the current URL name
+
     expenses = Expense.objects.filter(user=request.user)
     # for pie chart
     # Group expenses by category and sum the amounts
@@ -62,6 +63,8 @@ def home(request):
         "chart_labels_line": json.dumps(chart_labels_line),
         "chart_values_line": json.dumps(chart_values_line),
         "expenses": expenses,
+        "show_welcome": current_url_name == "home",  # Show welcome text only on home
+        "show_chart": True,  # Show chart on both pages
     }
 
     return render(request, "core/home.html", context)
