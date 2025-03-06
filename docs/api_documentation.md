@@ -1,6 +1,6 @@
 # **Expenser API Documentation**
 
-### **Authentication**
+## **Authentication**
 
 To access the API, you need to authenticate using a Bearer token. You can obtain this token by creating an account with **Expenser** and navigating to the **API section** of your account.
 
@@ -8,21 +8,16 @@ Once you have registered and logged in, you can generate your token in the API s
 
 ### **Example of Authentication (Bearer Token)**
 
-```text
-  Authorization: Bearer YOUR_ACCESS_TOKEN
+> Authorization: Bearer YOUR_ACCESS_TOKEN
 
-
-### **Error Codes**
+## **Error Codes**
 
 - **400 Bad Request**: Invalid request format or data.
 - **401 Unauthorized**: Authentication failed or token expired.
 - **404 Not Found**: The requested resource was not found.
 - **500 Internal Server Error**: A server error occurred.
 
-
-### **Endpoints**
-
----
+## **Endpoints**
 
 ### **1. Get All Expenses**
 
