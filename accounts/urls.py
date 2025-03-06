@@ -6,6 +6,7 @@ from .views import (
     CustomLoginView,
     RegistrationView,
     delete_user,
+    generate_api,
 )
 
 
@@ -26,4 +27,5 @@ urlpatterns = [
         name="password_change_done",
     ),
     path("delete-user/", delete_user, name="delete_user"),
+    path("generate-api/", generate_api, name="generate_api"),
 ]

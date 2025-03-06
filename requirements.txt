@@ -6,3 +6,9 @@ reportlab
 
 #for exporting expenses as export
 openpyxl
+
+#for API functionality
+djangorestframework
+
+#for API authentication
+djangorestframework-simplejwt

@@ -5,10 +5,24 @@ from django.contrib.auth.views import PasswordChangeView, LoginView
 from django.contrib.auth import login
 from django.views import View
 from django.urls import reverse_lazy
-from .forms import CustomUserCreationForm  # Import your custom form
+from .forms import CustomUserCreationForm
+from rest_framework.authtoken.models import Token
 
 
 # Create your views here.
+@login_required
+def generate_api(request):
+    usr = request.user
+    token = Token.objects.get(user=usr)
+    if token:
+        return render(request, "accounts/api.html", {"token": token})
+    else:
+        if request.method == "POST":
+            token = Token.objects.create(user=usr)
+            token = Token.objects.get(user=usr)
+            return render(request, "accounts/api.html", {"token": token})
+        else:
+            return render(request, "accounts/api.html")
 
 
 class RegistrationView(View):

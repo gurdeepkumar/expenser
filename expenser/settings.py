@@ -43,11 +43,21 @@ INSTALLED_APPS = [
     "accounts",
     "expenses",
     "exporter",
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 LOGIN_REDIRECT_URL = "home"  # Redirect after login
 LOGOUT_REDIRECT_URL = "login"  # Redirect after logout
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",  # Ensure that users need to be authenticated
+    ],
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
