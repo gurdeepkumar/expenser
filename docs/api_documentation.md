@@ -8,7 +8,7 @@ Once you have registered and logged in, you can generate your token in the API s
 
 ### **Example of Authentication (Bearer Token)**
 
-> Authorization: Bearer YOUR_ACCESS_TOKEN
+> Authorization: Token YOUR_ACCESS_TOKEN
 
 ## **Error Codes**
 
