@@ -125,10 +125,7 @@ def list_expenses(request):
         sort_form = SortForm()
         filter_form = RefiningForm(request.GET, user=request.user)
 
-        # Get filter values from request
-        selected_categories_ids = request.GET.getlist(
-            "category"
-        )  # Get multiple selected categories
+        selected_categories_ids = request.GET.getlist("category")
         min_amount = request.GET.get("min_amount")
         max_amount = request.GET.get("max_amount")
         start_date = request.GET.get("from_date")
@@ -142,7 +139,7 @@ def list_expenses(request):
                 )
             filter_expenses = filter_expenses.filter(
                 category__name__in=selected_categories
-            )  # Filter by multiple categories
+            )
         if min_amount:
             filter_expenses = filter_expenses.filter(amount__gte=min_amount)
         if max_amount:
@@ -272,9 +269,8 @@ def add_expense(request):
         if form.is_valid():
 
             expense = form.save(commit=False)
-            expense.user = request.user  # Assign expense to logged-in user
+            expense.user = request.user
 
-            # Handle new category if provided
             category_name = form.cleaned_data.get("category")
             new_category_name = form.cleaned_data.get("new_category")
             if category_name == None:
@@ -331,9 +327,8 @@ def view_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id, user=request.user)
 
     if request.method == "POST":
-        # Handle deletion of the expense
         expense.delete()
-        return redirect("list_expenses")  # Redirect to the expense list after deletion
+        return redirect("list_expenses")
 
     return render(request, "expenses/view_expense.html", {"expense": expense})
 
@@ -346,9 +341,7 @@ def edit_expense(request, expense_id):
         form = ExpenseForm(request.POST, instance=expense, user=request.user)
         if form.is_valid():
             form.save()
-            return redirect(
-                "view_expense", expense_id=expense.id
-            )  # Redirect to the view expense page after editing
+            return redirect("view_expense", expense_id=expense.id)
     else:
         form = ExpenseForm(instance=expense, user=request.user)
 
