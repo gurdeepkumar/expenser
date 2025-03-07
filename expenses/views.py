@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Expense, Category
 from .forms import ExpenseForm, RefiningForm, SearchForm, SortForm
 from django.db.models import Q
@@ -14,7 +15,7 @@ class ExpenseListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        expenses = Expense.objects.filter(user=request.user)
+        expenses = Expense.objects.filter(user=request.user).select_related("category")
         serializer = ExpenseSerializer(expenses, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -96,7 +97,11 @@ def list_expenses(request):
     categories = user.expense_set.values_list("category__name", flat=True).distinct()
 
     if request.GET == {} or ("clear_filters" in request.GET):
-        expenses = Expense.objects.filter(user=request.user).order_by("-created_at")
+        expenses = (
+            Expense.objects.filter(user=request.user)
+            .order_by("-created_at")
+            .select_related("category")
+        )
         search_form = SearchForm()
         sort_form = SortForm()
         filter_form = RefiningForm(user=request.user)
@@ -265,6 +270,7 @@ def add_expense(request):
     if request.method == "POST":
         form = ExpenseForm(request.POST, user=request.user)
         if form.is_valid():
+
             expense = form.save(commit=False)
             expense.user = request.user  # Assign expense to logged-in user
 
@@ -297,10 +303,25 @@ def add_expense(request):
                     category = category_name
 
             expense.category = category
+            expense.user = request.user
+
+            duplicate_expense = Expense.objects.filter(
+                user=request.user,
+                title=expense.title,
+                amount=expense.amount,
+                category=expense.category,
+                date=expense.date,
+            ).exists()
+
+            if duplicate_expense:
+                messages.error(request, "This expense already exists!")
+                return render(request, "expenses/add_expense.html", {"form": form})
+
             expense.save()
-            return redirect("list_expenses")  # Redirect after saving
+            messages.success(request, "Expense added successfully!")
+            return redirect("list_expenses")
     else:
-        form = ExpenseForm(user=request.user)  # Pass user to form
+        form = ExpenseForm(user=request.user)
 
     return render(request, "expenses/add_expense.html", {"form": form})
 
