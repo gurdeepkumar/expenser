@@ -13,16 +13,14 @@ from rest_framework.authtoken.models import Token
 @login_required
 def generate_api(request):
     usr = request.user
-    token = Token.objects.get(user=usr)
-    if token:
-        return render(request, "accounts/api.html", {"token": token})
-    else:
+    token = None
+    try:
+        token = Token.objects.get(user=usr)
+    except Token.DoesNotExist:
         if request.method == "POST":
             token = Token.objects.create(user=usr)
-            token = Token.objects.get(user=usr)
-            return render(request, "accounts/api.html", {"token": token})
-        else:
-            return render(request, "accounts/api.html")
+
+    return render(request, "accounts/api.html", {"token": token})
 
 
 class RegistrationView(View):
