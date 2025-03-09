@@ -3,3 +3,15 @@
 body {
     font-family: "Roboto Flex", serif; /* Change to your desired font */
 }
+
+#logout-form {
+    display: inline;
+}
+
+#logout-form button {
+    color: rgba(255, 255, 255, .55);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}

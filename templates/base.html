@@ -48,7 +48,12 @@
                             <a class="nav-link" href="{% url 'password_change' %}">Account</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                            <a class="nav-link">
+                                <form id="logout-form" method="post" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Logout</button>
+                                </form>
+                            </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
