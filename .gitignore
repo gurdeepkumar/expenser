@@ -172,7 +172,6 @@ cython_debug/
 .pypirc
 
 # Static and media files
-/static/
 /media/
 
 # IDE and editor files
@@ -180,3 +179,4 @@ cython_debug/
 .vscode/
 .idea/
 
+.vercel
