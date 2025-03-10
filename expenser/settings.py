@@ -24,7 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Access environment variables
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG")
-DATABASE_URL = os.getenv("DATABASES")
+db_user = os.getenv("db_user")
+db_password = os.getenv("db_password")
+
 
 ALLOWED_HOSTS = [
     "localhost",

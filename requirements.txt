@@ -15,3 +15,7 @@ djangorestframework
 
 #for API authentication
 djangorestframework-simplejwt
+
+dotenv
+
+whitenoise
