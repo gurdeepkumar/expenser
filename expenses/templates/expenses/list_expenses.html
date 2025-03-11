@@ -89,31 +89,33 @@
     </div>
 </form>
 
-
-<table class="table table-hover my-3">
-    <thead>
-        <tr class="table-dark">
-            <th>Title {% if sort_by and sort_by == "title" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
-            <th>Amount {% if sort_by and sort_by == "amount" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
-            <th>Category {% if sort_by and sort_by == "category" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
-            <th>Expense Date {% if sort_by and sort_by == "date" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
-            <th>Created On {% if not sort_by or sort_by == "" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for expense in expenses %}
-        <tr data-href="{% url 'view_expense' expense.id %}" style="cursor: pointer;">
-            <td>{{ expense.title }}</td>
-            <td>€{{ expense.amount }}</td>
-            <td>{{ expense.category.name }}</td>
-            <td>{{ expense.date }}</td>
-            <td>{{ expense.created_at|date:"M. d, Y" }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">No expenses found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive-sm">
+    <table class="table table-hover my-3">
+        <thead>
+            <tr class="table-dark">
+                <th>Title {% if sort_by and sort_by == "title" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+                <th>Amount {% if sort_by and sort_by == "amount" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+                <th>Category {% if sort_by and sort_by == "category" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+                <th>Expense Date {% if sort_by and sort_by == "date" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+                <th>Created On {% if not sort_by or sort_by == "" %} {% if not sort_order or sort_order == "decending" %} ▼ {% elif sort_order == "ascending" %} ▲ {% endif %} {% endif %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr data-href="{% url 'view_expense' expense.id %}" style="cursor: pointer;">
+                <td>{{ expense.title }}</td>
+                <td>€{{ expense.amount }}</td>
+                <td>{{ expense.category.name }}</td>
+                <td>{{ expense.date }}</td>
+                <td>{{ expense.created_at|date:"M. d, Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No expenses found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    
 {% endblock %}
