@@ -16,38 +16,38 @@
         <strong>Total spending for following expenses is: €{{ total_expenses }}</strong> 
     </div>
     <div class="col-md-4">
-        <a id="filterToggleBtn" class="btn d-grid btn-secondary">Show Filter Option</a>
+        <a id="filterToggleBtn" class="btn d-grid btn-secondary">Refining options </a>
     </div>
 </div>
 
-<div class="row g-3">
-    <form method="get" class="col-md-6">
-        <div class="row g-3">
-            <div class="col-md-6">
-                {{ search_form.search_input|add_class:"form-control" }}
+<div id="filterOptions" {%if "clear_filter" in request.GET or "filter" in request.GET %} style="display: block;" {% else %} style="display: none;" {%endif%} >
+    <div class="row g-3">
+        <form method="get" class="col-md-6">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ search_form.search_input|add_class:"form-control" }}
+                </div>
+                <div class="col-md-6 d-grid">
+                    <button name="search" class="btn btn-primary">Serach</button>
+                </div>
             </div>
-            <div class="col-md-6 d-grid">
-                <button name="search" class="btn btn-primary">Serach</button>
+        </form>
+        <form method="get" class="col-md-6">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    {{ sort_form.sort_by|add_class:"form-control selectpicker" }}
+                </div>
+                <div class="col-md-5">
+                    {{ sort_form.sort_order|add_class:"form-control selectpicker" }}
+                </div>
+                <div class="col-md-2 d-grid">
+                    <button class="btn btn-primary" name="sort">Sort</button>
+                </div>
             </div>
-        </div>
-    </form>
-    <form method="get" class="col-md-6">
-        <div class="row g-3">
-            <div class="col-md-5">
-                {{ sort_form.sort_by|add_class:"form-control selectpicker" }}
-            </div>
-            <div class="col-md-5">
-                {{ sort_form.sort_order|add_class:"form-control selectpicker" }}
-            </div>
-            <div class="col-md-2 d-grid">
-                <button class="btn btn-primary" name="sort">Sort</button>
-            </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 
-<form method="get">
-    <div id="filterOptions" {%if "clear_filter" in request.GET or "filter" in request.GET %} style="display: block;" {% else %} style="display: none;" {%endif%} >
+    <form method="get">
         <div class="row">    
             <div class="col-md-4">
                 <div class="form-group my-2">
@@ -77,17 +77,17 @@
                 <div class="row my-2">
                     <div class="form-group col-md-6">
                         <label></label>
-                        <button type="submit" name="clear_filters" class="btn btn-warning form-control">Clear</button>
+                        <button type="submit" name="filter" class="btn btn-primary form-control">Filter</button>
                     </div>
                     <div class="form-group col-md-6">
                         <label></label>
-                        <button type="submit" name="filter" class="btn btn-primary form-control">Filter</button>
-                    </div> 
+                        <button type="submit" name="clear_filters" class="btn btn-warning form-control">Clear</button>
+                    </div>
                 </div>
             </div>
         </div>  
-    </div>
-</form>
+    </form>
+</div>
 
 <div class="table-responsive-sm">
     <table class="table table-hover my-3">
