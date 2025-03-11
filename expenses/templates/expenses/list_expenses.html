@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<div id="filterOptions" {%if "clear_filter" in request.GET or "filter" in request.GET %} style="display: block;" {% else %} style="display: none;" {%endif%} >
+<div id="filterOptions" {%if "sort" in request.GET or "search" in request.GET or "clear_filter" in request.GET or "filter" in request.GET %} style="display: block;" {% else %} style="display: none;" {%endif%} >
     <div class="row g-3">
         <form method="get" class="col-md-6">
             <div class="row g-3">
