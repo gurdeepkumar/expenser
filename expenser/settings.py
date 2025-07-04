@@ -27,12 +27,6 @@ DEBUG = os.getenv("DEBUG")
 db_user = os.getenv("db_user")
 db_password = os.getenv("db_password")
 
-
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-]
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -43,6 +37,29 @@ DATABASES = {
     }
 }
 
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "expenser.gurdeepkumar.com",
+    "35.181.96.100",
+]
+
+# Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+# for PostGreS
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'expenserdb',
+        'USER': db_user,
+        'PASSWORD': db_password,
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+"""
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 

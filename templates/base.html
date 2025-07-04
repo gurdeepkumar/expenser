@@ -1,109 +1,174 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>{% block title %}Expenser{% endblock %}</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css" integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">  <!-- Updated path -->
+    <!--Google Analytics-->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-C96PGYZ9RD"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-C96PGYZ9RD");
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css"
+      integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+    <!-- Updated path -->
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     {% block head %}{% endblock %}
-    
-</head>
-<body>
-    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" role="navigation">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">Expenser</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
-                    {% if request.user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'add_expenses' %}">Add New</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'list_expenses' %}">View Expenses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'visual_expenses' %}">Visualize</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'exporter' %}">Export</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'password_change' %}">Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link">
-                                <form id="logout-form" method="post" action="{% url 'logout' %}">
-                                    {% csrf_token %}
-                                    <button type="submit">Logout</button>
-                                </form>
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
+  </head>
+  <body>
+    <nav
+      class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark"
+      role="navigation"
+    >
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">Expenser</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto">
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'add_expenses' %}">Add New</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'list_expenses' %}"
+                >View Expenses</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'visual_expenses' %}"
+                >Visualize</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'exporter' %}">Export</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'password_change' %}">Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">
+                <form
+                  id="logout-form"
+                  method="post"
+                  action="{% url 'logout' %}"
+                >
+                  {% csrf_token %}
+                  <button type="submit">Logout</button>
+                </form>
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Sign Up</a>
+            </li>
+            {% endif %}
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container my-4">
-        <!-- Messages and errors display -->
-        {% if messages %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-        {% if form.errors %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {% for key, value in form.errors.items %}
-                    {{ value }}
-                {% endfor %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-        <!-- Container for apps -->
-        <div class="container mb-5">
-            {% block content %}{% endblock %}
-        </div>
+      <!-- Messages and errors display -->
+      {% if messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {% for message in messages %} {{ message }} {% endfor %}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endif %} {% if form.errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {% for key, value in form.errors.items %} {{ value }} {% endfor %}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endif %}
+      <!-- Container for apps -->
+      <div class="container mb-5">{% block content %}{% endblock %}</div>
     </div>
 
     <footer class="footer fixed-bottom bg-dark">
-        <div class="container text-center">
-            <span class="text-white">
-                &copy; 2025 Expenser
-            </span>
-        </div>
+      <div class="container text-center">
+        <span class="text-white"> &copy; 2025 Expenser </span>
+      </div>
     </footer>
     <script src="{% static 'expenses/js/scripts.js' %}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js" integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"
+      integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </body>
 </html>
-
-
